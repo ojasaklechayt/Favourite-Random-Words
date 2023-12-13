@@ -7,14 +7,14 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
       child: MaterialApp(
-        title: 'Favourite Radom Words',
+        title: 'Favorite Random Words',
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
@@ -33,13 +33,13 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  var favourites = <WordPair>[]; // empty list
+  var favorites = <WordPair>[]; // empty list
 
-  void toggleFavoirites() {
-    if (favourites.contains(current)) {
-      favourites.remove(current);
+  void toggleFavorites() {
+    if (favorites.contains(current)) {
+      favorites.remove(current);
     } else {
-      favourites.add(current);
+      favorites.add(current);
     }
     notifyListeners();
   }
@@ -52,6 +52,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     Widget page;
@@ -100,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         );
-      }
+      },
     );
   }
 }
@@ -112,7 +113,7 @@ class GeneratorPage extends StatelessWidget {
     var pair = appState.current;
 
     IconData icon;
-    if (appState.favourites.contains(pair)) {
+    if (appState.favorites.contains(pair)) {
       icon = Icons.favorite;
     } else {
       icon = Icons.favorite_border;
@@ -129,7 +130,7 @@ class GeneratorPage extends StatelessWidget {
             children: [
               ElevatedButton.icon(
                 onPressed: () {
-                  appState.toggleFavoirites();
+                  appState.toggleFavorites();
                 },
                 icon: Icon(icon),
                 label: Text('Like'),
@@ -149,13 +150,12 @@ class GeneratorPage extends StatelessWidget {
   }
 }
 
-
 class FavoritePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
 
-    if (appState.favourites.isEmpty) {
+    if (appState.favorites.isEmpty) {
       return Center(
         child: Text('No favorites yet.'),
       );
@@ -165,10 +165,9 @@ class FavoritePage extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.all(20),
-          child: Text('You have '
-              '${appState.favourites.length} favorites:'),
+          child: Text('You have ${appState.favorites.length} favorites:'),
         ),
-        for (var pair in appState.favourites)
+        for (var pair in appState.favorites)
           ListTile(
             leading: Icon(Icons.favorite),
             title: Text(pair.asLowerCase),
@@ -180,7 +179,7 @@ class FavoritePage extends StatelessWidget {
 
 class BigCard extends StatelessWidget {
   const BigCard({
-    super.key,
+    Key? key,
     required this.pair,
   });
 
